@@ -98,48 +98,49 @@ yarn build
 # 1. Класс Api
 
 Базовый класс для работы с API:
-
+```
 get(uri: string);
 post(uri: string, data?: object, method?: 'POST' | 'PUT' | 'DELETE');
 handleResponse(response: Response);
-
+```
 * Методы get(uri: string) и post(uri: string, data: object, method: ApiPostMethods = 'POST') осуществляют базовые get и post запросы к серверу
 * Метод handleResponse(response: Response): Promise<object> - осуществляет обработку пришедшего ответа с сервера (парсинг JSON, обработка ошибки)
-
+```
 type ApiListResponse<Type> = {
     total: number,
     items: Type[]
 };
-
+```
+```
 type ApiOrderResponse<Type> = {
     total: number,
     id: string
 }
-
+```
 * ApiListResponse и ApiOrderResponse - типы ответов сервера по запросам product и order
 
 # 2. Класс CardAPI
 
 Класс для работы с данными о карточках и заказах, реализующий интерфейс ICardAPI:
-
+```
 interface ICardAPI {
   getCards(): Promise<ICard[]>;
   sendOrder(order: IOrder): Promise<IOrderResult>;
 }
-
+```
 * getCards - получает с сервера информацию о карточках товаров
 * sendOrder - отправляет готовый заказ на сервер
 
 # 3. Класс EventEmitter
 
 Класс-событийный брокер:
-
+```
 interface IEvents {
   on<T extends object>(event: string, callback: (data: T) => void): void;
   emit<T extends object>(event: string, data?: T): void;
   trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void;
 }
-
+```
 * on - подписывает элемент на конкретное событие в EventEmitter
 * onAll(callback: (event: EmitterEvent) => void) - подписывает элемент на все события в EventEmitter
 * off(eventName: EventName, callback: Subscriber) - отписывает элемент с события в EventEmitter
@@ -189,6 +190,7 @@ interface IEvents {
 * readonly fieldNames: string[]; - поля доступные для присваивания у компонента
 
 # Типы
+```
 type ApiListResponse<Type> = {
   total: number;
   items: Type[];
@@ -198,7 +200,7 @@ type ApiOrderResponse<Type> = {
   total: number;
   id: string;
 };
-
+```
 enum elementMode {
   parent = 'parent',
   children = 'children',
