@@ -1,90 +1,64 @@
-import {EventEmitter} from "../components/base/events";
-import {Component, ContentValue} from "../components/base/Component";
-
+// Каталог
 export interface ICard {
-    id: string;
-    title: string;
-    description: string;
-    category: string;
-    image: string;
-    price: number | null;
+	id: string;
+	index?: number;
+	description: string;
+	image?: string;
+	title: string;
+	category: string;
+	price: number | null;
 }
 
-export interface IOrder {
-    payment: string;
-    email: string;
-    phone: string;
-    address: string;
-    total: number;
-    items: ICard[];
+// Формы страницы заказа
+export interface IOrderForm {
+	email: string;
+	phone: string;
+	address: string;
+	payment: string;
+	total: number;
+	[key: string]: unknown;
 }
 
+// Объекты для заказа
+export interface IOrder extends IOrderForm {
+	items: string[];
+}
+
+// Элементы
+export interface IAppState {
+	catalog: ICard[];
+	basket: string[];
+	order: IOrder | null;
+
+	// Заполнение католога
+	setCatalog(items: ICard[]): void;
+
+	// Получение данных о цене продуктов в корзине
+	getPrice(container: ICard[], value: string): string;
+
+	// Добавление товара
+	addProduct(item: ICard, container: ICard[]): void;
+
+	// Очистка корзины
+	clearBasket(container: ICard[]): void;
+
+	// Передача данных заказа перед отправкой
+	setOrder(state: IOrder): void;
+}
+
+// Получение элементов страницы
+export interface ITotalItems<T> {
+	total: number;
+	items: T[];
+}
+
+// Данные элементов каталога для заказа
 export interface IOrderResult {
-    id: string;
-    total: number | null;
+	id: string;
+	total: number;
 }
 
-export interface ICardAPI {
-    getCards: () => Promise<ICard[]>
-    sendOrder: (order: IOrder) => Promise<IOrderResult>
-}
-
-export interface ICardBasket {
-    id: string
-    title: string
-    price: number | null
-}
-
-export interface ICardGallery extends ICardBasket {
-    image: string
-    category: string
-}
-
-export interface ICardPreview extends ICardGallery {
-    description: string
-    changeStatus: () => void
-}
-
-export interface IPage {
-    count: number
-    lockScroll: (state: boolean) => void
-}
-
-export interface IGallery {
-    setCards: (cardTemplate: string, cardsData: ICard[], emitter: EventEmitter) => void
-}
-
-export interface IBasket {
-    total: number;
-    setBasketItems: (basketItemTemplate: string, basketItems: ICard[], emitter: EventEmitter) => void
-    clearBasket: () => void
-}
-
-export interface IBasketData {
-    count: number
-    total: number
-    items: ICard[]
-    changeItem: (data: ICard) => void
-    hasItem: (data: ICard) => boolean
-    addItem: (data: ICard) => void
-    removeItem: (data: ICard) => void
-    clearBasket: () => void
-}
-
-export interface IModal {
-    content: ContentValue;
-    setActive: (state: boolean) => void
-    close: () => void
-}
-
-export interface IForm {
-    inputs: Set<Component<HTMLInputElement>>
-    configure(keys: string[]): Set<Component<HTMLInputElement>>
-    validateButton(state: boolean): void
-    showError(error: string[]): void
-}
-
-export interface ICardData {
-    cache: ICard[]
-    getCardInfo: (id: string) => ICard
-}
+export type ApiListResponse<Type> = {
+	total: number;
+	items: Type[];
+};
