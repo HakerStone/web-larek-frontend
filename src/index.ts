@@ -12,8 +12,6 @@ import { Basket } from './components/common/Basket';
 import { Order } from './components/Order';
 import { Success } from './components/common/Success';
 
-// Корзина отображается по проекту, проверил в разных браузерах и на разных устройствах
-
 const events = new EventEmitter();
 const api = new Api(API_URL);
 
@@ -52,7 +50,7 @@ events.on('items:changed', () => {
 		});
 		return card.render({
 			title: item.title,
-			image: CDN_URL + item.image, // показалось что целый класс ради одной константы создавать не стоит, но не уверен
+			image: CDN_URL + item.image,
 			description: item.description,
 			price: item.price,
 			category: item.category,
