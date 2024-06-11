@@ -2,39 +2,34 @@ import { Component } from '../base/Component';
 import { ensureElement } from '../../utils/utils';
 
 interface ISuccess {
-	total: string;
+	total: number;
 }
 
 interface ISuccessActions {
 	onClick: () => void;
 }
 
-// Класс окна подтверждения заказа
 export class Success extends Component<ISuccess> {
-	protected _close: HTMLElement;
 	protected _total: HTMLElement;
+	protected _close: HTMLElement;
 
 	constructor(container: HTMLElement, actions: ISuccessActions) {
 		super(container);
-
-		this._close = ensureElement<HTMLElement>(
-			'.order-success__close',
-			this.container
-		);
 
 		this._total = ensureElement<HTMLElement>(
 			'.order-success__description',
 			this.container
 		);
+		this._close = ensureElement<HTMLElement>(
+			'.order-success__close',
+			this.container
+		);
 
-		if (actions?.onClick) {
+		if (actions?.onClick)
 			this._close.addEventListener('click', actions.onClick);
-		}
 	}
 
-	set total(value: string) {
-		const resValue = 'Списано ' + value;
-
-		this.setText(this._total, resValue);
+	set total(total: string) {
+		this.setText(this._total, total);
 	}
 }

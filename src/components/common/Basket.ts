@@ -1,53 +1,35 @@
 import { Component } from '../base/Component';
-import { createElement, ensureElement } from '../../utils/utils';
 import { EventEmitter } from '../base/events';
-import { CatalogItem } from '../Card';
+import { ensureElement, createElement, formatNumber } from '../../utils/utils';
+import { ICard } from '../Card';
 
 interface IBasketView {
 	items: HTMLElement[];
-	price: string;
-	selected: CatalogItem[];
+	total: number;
+	selected: string[];
 }
 
-// Корзина магазина
 export class Basket extends Component<IBasketView> {
 	protected _list: HTMLElement;
-	protected _price: HTMLElement;
+	protected _total: HTMLElement;
 	protected _button: HTMLElement;
-
-	selected: CatalogItem[];
-	total: string;
 
 	constructor(container: HTMLElement, protected events: EventEmitter) {
 		super(container);
 
 		this._list = ensureElement<HTMLElement>('.basket__list', this.container);
-		this._price = this.container.querySelector('.basket__price');
+		this._total = this.container.querySelector('.basket__price');
 		this._button = this.container.querySelector('.basket__button');
 
-		if (this._button) {
-			this._button.addEventListener('click', () => {
-				events.emit('address:render');
-			});
-		}
+		if (this._button)
+			this._button.addEventListener('click', () => events.emit('order:open'));
 
-		this.selected = [];
-
-		this.total = '';
+		this.items = [];
 	}
 
-	// Определение состояния кнопки корзины
-	protected setButtonStatus(price: string) {
-		parseInt(price) === 0
-			? this.setDisabled(this._button, true)
-			: this.setDisabled(this._button, false);
-	}
-
-	// Установить элементы товара
 	set items(items: HTMLElement[]) {
-		if (items.length) {
-			this._list.replaceChildren(...items);
-		} else {
+		if (items.length) this._list.replaceChildren(...items);
+		else {
 			this._list.replaceChildren(
 				createElement<HTMLParagraphElement>('p', {
 					textContent: 'Корзина пуста',
@@ -56,15 +38,12 @@ export class Basket extends Component<IBasketView> {
 		}
 	}
 
-	// Устновить стоимость товаров в корзине
-	set price(price: string) {
-		this.setText(this._price, price);
-		this.setButtonStatus(price);
-		this.total = price;
+	set selected(items: ICard[]) {
+		if (items.length) this.setDisabled(this._button, false);
+		else this.setDisabled(this._button, true);
 	}
 
-	// Получить стоимость товаров в корзине
-	get price(): string {
-		return this.total;
+	set total(total: number) {
+		this.setText(this._total, `${formatNumber(total)} синапсов`);
 	}
 }

@@ -4,10 +4,9 @@ import { ensureElement } from '../../utils/utils';
 
 interface IFormState {
 	valid: boolean;
-	errors: string;
+	errors: string[];
 }
 
-// Класс работы с формами
 export class Form<T> extends Component<IFormState> {
 	protected _submit: HTMLButtonElement;
 	protected _errors: HTMLElement;
@@ -22,14 +21,16 @@ export class Form<T> extends Component<IFormState> {
 		this._errors = ensureElement<HTMLElement>('.form__errors', this.container);
 
 		this.container.addEventListener('input', (e: Event) => {
-			const target = e.target as HTMLInputElement;
-			const field = target.name as keyof T;
-			const value = target.value;
+			const target = e.target as HTMLInputElement,
+				field = target.name as keyof T,
+				value = target.value;
+
 			this.onInputChange(field, value);
 		});
 
 		this.container.addEventListener('submit', (e: Event) => {
 			e.preventDefault();
+
 			this.events.emit(`${this.container.name}:submit`);
 		});
 	}
@@ -49,11 +50,12 @@ export class Form<T> extends Component<IFormState> {
 		this.setText(this._errors, value);
 	}
 
-	// Отрисовка элемента на странице
 	render(state: Partial<T> & IFormState) {
 		const { valid, errors, ...inputs } = state;
+
 		super.render({ valid, errors });
 		Object.assign(this, inputs);
+
 		return this.container;
 	}
 }
