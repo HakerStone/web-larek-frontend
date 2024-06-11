@@ -1,6 +1,6 @@
-import { ensureElement } from '../utils/utils';
 import { Component } from './base/Component';
 import { IEvents } from './base/events';
+import { ensureElement } from '../utils/utils';
 
 interface IPage {
 	counter: number;
@@ -8,7 +8,6 @@ interface IPage {
 	locked: boolean;
 }
 
-// Класс страницы приложения
 export class Page extends Component<IPage> {
 	protected _counter: HTMLElement;
 	protected _catalog: HTMLElement;
@@ -23,27 +22,21 @@ export class Page extends Component<IPage> {
 		this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
 		this._basket = ensureElement<HTMLElement>('.header__basket');
 
-		this._basket.addEventListener('click', () => {
-			this.events.emit('basket:render');
-		});
+		this._basket.addEventListener('click', () =>
+			this.events.emit('basket:open')
+		);
 	}
 
-	// Счетчик элементов корзины
 	set counter(value: number) {
 		this.setText(this._counter, String(value));
 	}
 
-	// Элементы каталога
 	set catalog(items: HTMLElement[]) {
 		this._catalog.replaceChildren(...items);
 	}
 
-	// Блокировка скролла страницы
 	set locked(value: boolean) {
-		if (value) {
-			document.body.classList.add('page__wrapper_locked');
-		} else {
-			document.body.classList.remove('page__wrapper_locked');
-		}
+		if (value) this._wrapper.classList.add('page__wrapper_locked');
+		else this._wrapper.classList.remove('page__wrapper_locked');
 	}
 }
