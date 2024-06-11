@@ -1,3 +1,8 @@
+export type ApiListResponse<Type> = {
+	total: number;
+	items: Type[];
+};
+
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
 export class Api {
@@ -22,14 +27,14 @@ export class Api {
 				.then((data) => Promise.reject(data.error ?? response.statusText));
 	}
 
-	async get(uri: string) {
+	get(uri: string) {
 		return fetch(this.baseUrl + uri, {
 			...this.options,
 			method: 'GET',
 		}).then(this.handleResponse);
 	}
 
-	async post(uri: string, data: object, method: ApiPostMethods = 'POST') {
+	post(uri: string, data: object, method: ApiPostMethods = 'POST') {
 		return fetch(this.baseUrl + uri, {
 			...this.options,
 			method,
